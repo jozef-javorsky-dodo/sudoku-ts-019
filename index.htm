@@ -1,180 +1,179 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sudoku⸆⸉</title>
-    <meta
-      name="description"
-      content="Sudoku puzzle game, goal aim was to be it TypeScript stuff."
-    />
-    <meta
-      name="author"
-      content="['https://github.com/jozef-javorsky-dodo', 'https://g.dev/jozef-javorsky-dodo', 'jozef.javorsky.dodo@gmail.com']"
-    />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧩%3C/text%3E%3C/svg%3E"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: light)"
-      content="#f8fafc"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="#0f172a"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      :root {
-        --cell-size: clamp(32px, 10vw, 56px);
-        --radius: 0.5rem;
-        --border-width-thin: 1px;
-        --border-width-thick: 2px;
-        --transition-duration: 0.15s;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sudoku⸆⸉</title>
+  <meta name="description"
+    content="A feature-rich, accessible, and high-performance Sudoku single-page application built with modern TypeScript." />
+  <meta name="author" content="jj (( dodo )) 🐝🐢🐘💻💾🍕🥦🛹�⚛️🌌🍀🍃" />
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧩%3C/text%3E%3C/svg%3E" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f172a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cell-size: clamp(32px, 10vw, 56px);
+      --radius: 0.5rem;
+      --border-width-thin: 1px;
+      --border-width-thick: 2px;
+      --transition-duration: 0.15s;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      width: calc(var(--cell-size) * 9 + var(--border-width-thick) * 4);
+      height: calc(var(--cell-size) * 9 + var(--border-width-thick) * 4);
+      border-radius: var(--radius);
+      touch-action: manipulation;
+    }
+
+    .cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      font-size: clamp(1.2rem, 4vw, 1.75rem);
+      transition: background-color var(--transition-duration) ease-out;
+    }
+
+    .cell.border-r-thick {
+      border-right-width: var(--border-width-thick);
+    }
+
+    .cell.border-b-thick {
+      border-bottom-width: var(--border-width-thick);
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
+      height: 100%;
+      font-size: clamp(0.5rem, 1.5vw, 0.7rem);
+      line-height: 1.1;
+      pointer-events: none;
+    }
+
+    .numpad-btn:active {
+      transform: scale(0.95);
+    }
+
+    .animate-shake {
+      animation: shake 0.4s;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
       }
-      html {
-        scroll-behavior: smooth;
-        -webkit-tap-highlight-color: transparent;
+
+      25% {
+        transform: translateX(-4px);
       }
-      body {
-        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+
+      75% {
+        transform: translateX(4px);
       }
-      .grid-container {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-        width: calc(var(--cell-size) * 9 + var(--border-width-thick) * 4);
-        height: calc(var(--cell-size) * 9 + var(--border-width-thick) * 4);
-        border-radius: var(--radius);
-        touch-action: manipulation;
+    }
+
+    .animate-pop-in {
+      animation: pop-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes pop-in {
+      from {
+        transform: scale(0.7);
+        opacity: 0;
       }
-      .cell {
-        width: var(--cell-size);
-        height: var(--cell-size);
-        font-size: clamp(1.2rem, 4vw, 1.75rem);
-        transition: background-color var(--transition-duration) ease-out;
+
+      to {
+        transform: scale(1);
+        opacity: 1;
       }
-      .cell.border-r-thick {
-        border-right-width: var(--border-width-thick);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: { colors: { slate: { 600: "#475569", 850: "#172033" } } },
+      },
+    };
+  </script>
+</head>
+
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 transition-colors duration-300">
+  <noscript>
+    <div class="w-full h-full flex items-center justify-center p-8 text-center">
+      <p class="text-2xl font-semibold">
+        JavaScript is required to play this game. Please enable it in your
+        browser settings.
+      </p>
+    </div>
+  </noscript>
+  <div id="app-container"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/4.7.4/typescript.min.js"></script>
+  <script>
+    function loadApp() {
+      if (typeof ts === "undefined") {
+        setTimeout(loadApp, 50);
+        return;
       }
-      .cell.border-b-thick {
-        border-bottom-width: var(--border-width-thick);
-      }
-      .notes-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        width: 100%;
-        height: 100%;
-        font-size: clamp(0.5rem, 1.5vw, 0.7rem);
-        line-height: 1.1;
-        pointer-events: none;
-      }
-      .numpad-btn:active {
-        transform: scale(0.95);
-      }
-      .animate-shake {
-        animation: shake 0.4s;
-      }
-      @keyframes shake {
-        0%,
-        100% {
-          transform: translateX(0);
-        }
-        25% {
-          transform: translateX(-4px);
-        }
-        75% {
-          transform: translateX(4px);
-        }
-      }
-      .animate-pop-in {
-        animation: pop-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-      @keyframes pop-in {
-        from {
-          transform: scale(0.7);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border-width: 0;
-      }
-    </style>
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: { colors: { slate: { 600: "#475569", 850: "#172033" } } },
-        },
-      };
-    </script>
-  </head>
-  <body
-    class="h-full bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 transition-colors duration-300"
-  >
-    <noscript>
-      <div
-        class="w-full h-full flex items-center justify-center p-8 text-center"
-      >
-        <p class="text-2xl font-semibold">
-          ECMAScript usage required for this web-app.
-        </p>
-      </div>
-    </noscript>
-    <div id="app-container"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/4.7.4/typescript.min.js"></script>
-    <script>
-      function loadApp() {
-        if (typeof ts === "undefined") {
-          setTimeout(loadApp, 50);
-          return;
-        }
-        fetch("app.ts")
-          .then((response) => {
-            if (!response.ok)
-              throw new Error(`HTTP error! status: ${response.status}`);
-            return response.text();
-          })
-          .then((tsCode) => {
-            const jsCode = ts.transpile(tsCode, {
-              target: ts.ScriptTarget.ES2020,
-              module: ts.ModuleKind.None,
-            });
-            const script = document.createElement("script");
-            script.textContent = jsCode;
-            document.body.appendChild(script);
-          })
-          .catch((error) => {
-            console.error("Failed to load or transpile app.ts:", error);
-            const container = document.getElementById("app-container");
-            if (container)
-              container.innerHTML = `<div class="text-red-500 text-center p-4">Error: Could not load the game logic. Please check the console for details.</div>`;
+      fetch("app.ts")
+        .then((response) => {
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
+          return response.text();
+        })
+        .then((tsCode) => {
+          const jsCode = ts.transpile(tsCode, {
+            target: ts.ScriptTarget.ES2020,
+            module: ts.ModuleKind.None,
           });
-      }
-      document.addEventListener("DOMContentLoaded", loadApp);
-    </script>
-  </body>
+          const script = document.createElement("script");
+          script.textContent = jsCode;
+          document.body.appendChild(script);
+        })
+        .catch((error) => {
+          console.error("Failed to load or transpile app.ts:", error);
+          const container = document.getElementById("app-container");
+          if (container)
+            container.innerHTML = `<div class="text-red-500 text-center p-4">Error: Could not load the game logic. Please check the console for details.</div>`;
+        });
+    }
+    document.addEventListener("DOMContentLoaded", loadApp);
+  </script>
+</body>
+
 </html>
